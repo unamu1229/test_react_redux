@@ -1,26 +1,64 @@
-import React from 'react';
+import React, {Component} from 'react';
 import logo from './logo.svg';
 import './App.css';
+import {connect} from "react-redux";
+import store from './store';
+import {addToDo, removeToDo} from './actions';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+
+  constructor() {
+    super();
+    this.state = {
+      input: ""
+    }
+  }
+
+  render() {
+    return (
+        <div className="App">
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <p>
+              Edit <code>src/App.js</code> and save ll to reload.
+            </p>
+            <a
+                className="App-link"
+                href="https://reactjs.org"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+              Learn React
+            </a>
+          </header>
+          <ul>
+            {this.props.todos.map(todo => {
+              return (
+                  <li key={todo}><span>{todo}</span>
+                    <button onClick={()=>{
+                      this.props.dispatch(removeToDo(todo))
+                    }}>
+                      削除
+                    </button>
+                  </li>
+              );
+            })}
+          </ul>
+          <input type="text" onChange={e => this.setState({input: e.target.value})} />
+          <button onClick={() => {
+            this.props.dispatch(addToDo(this.state.input))
+          }} >
+            追加
+          </button>
+        </div>
+    );
+  }
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    todos:state.todos.list
+  }
+};
+
+export default connect(mapStateToProps)(App);
