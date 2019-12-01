@@ -15,6 +15,9 @@ class App extends Component {
   }
 
   render() {
+
+    const {onAddToDo, onRemoveToDo} = this.props;
+
     return (
         <div className="App">
           <header className="App-header">
@@ -36,7 +39,7 @@ class App extends Component {
               return (
                   <li key={todo}><span>{todo}</span>
                     <button onClick={()=>{
-                      this.props.dispatch(removeToDo(todo))
+                      onRemoveToDo(todo)
                     }}>
                       削除
                     </button>
@@ -46,7 +49,7 @@ class App extends Component {
           </ul>
           <input type="text" onChange={e => this.setState({input: e.target.value})} />
           <button onClick={() => {
-            this.props.dispatch(addToDo(this.state.input))
+            onAddToDo(this.state.input)
           }} >
             追加
           </button>
@@ -61,4 +64,15 @@ const mapStateToProps = state => {
   }
 };
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => {
+  return {
+    onAddToDo(todo) {
+      dispatch(addToDo(todo))
+    },
+    onRemoveToDo(todo) {
+      dispatch(removeToDo(todo))
+    }
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
